@@ -1,0 +1,33 @@
+name: "GitHub Workflow Dispatcher by Slack"
+description: "Send workflow_dispatch event using Slack bot"
+branding:
+  icon: "send"
+  color: "green"
+inputs:
+  repository:
+    description: "Target repository"
+    required: false
+  workflow:
+    description: "Workflow ID or filename"
+    required: false
+  ref:
+    description: "Workflow ref"
+    required: false
+  inputs:
+    description: "Workflow inputs"
+    required: false
+  channel:
+    description: "Slack Channel ID or name"
+    required: true
+  mention:
+    description: "Slack user to mention"
+    required: false
+  github-token:
+    description: "GitHub token"
+    required: false
+  slack-bot-token:
+    description: "Slack bot token"
+    required: false
+runs:
+  using: "node16"
+  main: "dist/index.js"
