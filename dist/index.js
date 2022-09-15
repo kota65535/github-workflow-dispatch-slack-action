@@ -15389,7 +15389,7 @@ const main = async () => {
   let ref = core.getInput('ref').trim();
   const channel = core.getInput('channel').trim();
   const mention = core.getInput('mention').trim();
-  let githubToken = core.getInput('slack-bot-token').trim();
+  let githubToken = core.getInput('github-token').trim();
   let slackBotToken = core.getInput('slack-bot-token').trim();
 
   // if repository not given, use this repository
