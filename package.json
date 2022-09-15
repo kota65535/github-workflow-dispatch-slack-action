@@ -1,5 +1,5 @@
 {
-  "name": "github-terraform-comment-action",
+  "name": "github-workflow-dispatch-slack-action",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -11,15 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kota65535/github-terraform-comment-action.git"
+    "url": "git+https://github.com/kota65535/github-workflow-dispatch-slack-action.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kota65535/github-terraform-comment-action/issues"
+    "url": "https://github.com/kota65535/github-workflow-dispatch-slack-action/issues"
   },
-  "homepage": "https://github.com/kota65535/github-terraform-comment-action#readme",
+  "homepage": "https://github.com/kota65535/github-workflow-dispatch-slack-action#readme",
   "dependencies": {
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.1",
