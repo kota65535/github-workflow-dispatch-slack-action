@@ -1,79 +1,79 @@
-const BASE_URL = 'https://github.com';
+const BASE_URL = "https://github.com";
 
 const createMessage = (owner, repo, workflow, workflowName, ref, inputs, mention) => {
-  const headText = 'Following workflow will be executed.';
+  const headText = "Following workflow will be executed.";
   const inputsJson = JSON.parse(inputs);
   const prettyInput = JSON.stringify(inputsJson, null, 2);
   const message = {
     text: headText,
     blocks: [
       {
-        type: 'section',
+        type: "section",
         text: {
-          type: 'mrkdwn',
-          text: `${mention ? `${mention} ` : ''}:rocket: ${headText}`
-        }
-      }
+          type: "mrkdwn",
+          text: `${mention ? `${mention} ` : ""}:rocket: ${headText}`,
+        },
+      },
     ],
     attachments: [
       {
-        color: '#3AA3E3',
+        color: "#3AA3E3",
         blocks: [
           {
-            type: 'section',
+            type: "section",
             fields: [
               {
-                type: 'mrkdwn',
-                text: `*Repository*\n<${BASE_URL}/${owner}/${repo}|${owner}/${repo}>`
+                type: "mrkdwn",
+                text: `*Repository*\n<${BASE_URL}/${owner}/${repo}|${owner}/${repo}>`,
               },
               {
-                type: 'mrkdwn',
-                text: `*Workflow Name*\n<${BASE_URL}/${owner}/${repo}/actions/workflows/${workflow}|${workflowName}>`
-              }
-            ]
+                type: "mrkdwn",
+                text: `*Workflow Name*\n<${BASE_URL}/${owner}/${repo}/actions/workflows/${workflow}|${workflowName}>`,
+              },
+            ],
           },
           {
-            type: 'section',
+            type: "section",
             fields: [
               {
-                type: 'mrkdwn',
-                text: `*Ref*\n<${BASE_URL}/${owner}/${repo}/tree/${ref}|${ref}>`
-              }
-            ]
-          }
-        ]
-      }
-    ]
+                type: "mrkdwn",
+                text: `*Ref*\n<${BASE_URL}/${owner}/${repo}/tree/${ref}|${ref}>`,
+              },
+            ],
+          },
+        ],
+      },
+    ],
   };
 
   if (inputs) {
     message.attachments[0].blocks.push({
-      type: 'section',
+      type: "section",
       text: {
-        type: 'mrkdwn',
-        text: `*Workflow Inputs*\n\`\`\`${prettyInput}\`\`\``
-      }
+        type: "mrkdwn",
+        text: `*Workflow Inputs*\n\`\`\`${prettyInput}\`\`\``,
+      },
     });
   }
 
   message.attachments[0].blocks.push(
     {
-      type: 'section',
+      type: "section",
       text: {
-        type: 'mrkdwn',
-        text: 'Do you want to approve?'
-      }
+        type: "mrkdwn",
+        text: "Do you want to approve?",
+      },
     },
     {
-      type: 'actions',
+      type: "actions",
       elements: [
         {
-          type: 'button',
+          type: "button",
           text: {
-            type: 'plain_text',
-            text: 'OK'
+            type: "plain_text",
+            text: "OK",
           },
-          style: 'primary',
+          style: "primary",
           value: JSON.stringify({
             choice: true,
             request: {
@@ -81,22 +81,22 @@ const createMessage = (owner, repo, workflow, workflowName, ref, inputs, mention
               repo: repo,
               workflow_id: workflow,
               ref: ref,
-              inputs: inputsJson
-            }
-          })
+              inputs: inputsJson,
+            },
+          }),
         },
         {
-          type: 'button',
+          type: "button",
           text: {
-            type: 'plain_text',
-            text: 'Cancel'
+            type: "plain_text",
+            text: "Cancel",
           },
-          style: 'danger',
+          style: "danger",
           value: JSON.stringify({
-            choice: false
-          })
-        }
-      ]
+            choice: false,
+          }),
+        },
+      ],
     }
   );
 

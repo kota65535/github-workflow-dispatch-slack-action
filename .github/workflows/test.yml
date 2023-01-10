@@ -1,0 +1,42 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+  pull_request:
+
+
+jobs:
+  show-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show github context object
+        run: echo $JSON
+        env:
+          JSON: ${{ toJSON(github) }}
+  
+  dispatch:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./.github/workflows
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Dispatch event
+        uses: ./
+        with:
+          workflow: do-something.yml
+          inputs: '{"foo":"1","bar":"2"}'
+          channel: github
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Dispatch event 2
+        uses: kota65535/github-terraform-plan-slack-action@v1
+        with:
+          workflow: do-something.yml
+          inputs: '{"foo":"1","bar":"2"}'
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}

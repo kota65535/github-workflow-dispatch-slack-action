@@ -6,28 +6,28 @@ branding:
 inputs:
   repository:
     description: "Target repository"
-    required: false
+    default: ${{ github.repository }}
   workflow:
     description: "Workflow ID or filename"
-    required: false
+    required: true
   ref:
     description: "Workflow ref"
-    required: false
   inputs:
     description: "Workflow inputs"
-    required: false
+  github-token:
+    description: "GitHub token"
+  default-github-token:
+    description: "Default GitHub token"
+    default: ${{ github.token }}
   channel:
     description: "Slack Channel ID or name"
     required: true
-  mention:
-    description: "Slack user to mention"
-    required: false
-  github-token:
-    description: "GitHub token"
-    required: false
   slack-bot-token:
     description: "Slack bot token"
-    required: false
+  slack-webhook-url:
+    description: "Slack webhook URL"
+  mention:
+    description: "Slack user to mention"
 runs:
   using: "node16"
   main: "dist/index.js"

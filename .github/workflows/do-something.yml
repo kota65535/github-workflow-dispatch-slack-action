@@ -1,0 +1,20 @@
+name: Do something
+
+on:
+  workflow_dispatch:
+    inputs:
+      foo:
+        type: string
+        required: true
+      bar:
+        type: string
+        required: true
+
+jobs:
+  show-context:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show github context object
+        run: echo $JSON
+        env:
+          JSON: ${{ toJSON(github) }}

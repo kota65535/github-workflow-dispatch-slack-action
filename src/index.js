@@ -1,5 +1,5 @@
-const core = require('@actions/core');
-const main = require('./main');
+const core = require("@actions/core");
+const main = require("./main");
 
 try {
   main();
