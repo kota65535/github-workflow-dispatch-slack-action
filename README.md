@@ -4,6 +4,10 @@ GitHub Action for triggering
 GitHub [workflow_dispatch](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_dispatch)
 event by Slack.
 
+This action is assumed to be used with a Slack app that handles its interaction payload and trigger the workflow.
+This can be easily done by Terraform with [github-workflow-dispatch-slack](https://registry.terraform.io/modules/kota65535/github-workflow-dispatch-slack/aws/latest)
+Terraform module.
+
 ## Inputs
 
 | Name                | Description                                           | Required | Default                                                 |
@@ -29,6 +33,12 @@ event by Slack.
 2. Need to specify `channel` and `slack-bot-token` both or `slack-webhook-url`.
 
 ## Usage
+
+1. Create a Slack app in your workspace. Then get its bot token or webhook URL.
+2. Create related AWS resources by Terraform with [github-workflow-dispatch-slack](https://registry.terraform.io/modules/kota65535/github-workflow-dispatch-slack/aws/latest)
+   Terraform module.
+3. Enable interactivity of the Slack app. Use the API Gateway's invoke URL into as the Request URL.
+4. Use this actions like this.
 
 ```yaml
 
