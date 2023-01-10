@@ -1,4 +1,5 @@
 const core = require("@actions/core");
+const { context } = require("@actions/github");
 const { getOctokit } = require("@actions/github");
 const send = require("./slack");
 const createMessage = require("./slack_message");
@@ -39,6 +40,21 @@ const main = async () => {
   const mention = core.getInput("mention");
 
   const [owner, repo] = repository.split("/");
+
+  if (!ref) {
+    if (owner === context.repo.owner && repo === context.repo.repo) {
+      // On the same repository
+      if (context.eventName === "pull_request") {
+        ref = context.payload.pull_request.head.ref;
+      } else {
+        ref = context.ref;
+      }
+    } else {
+      // On an another repository
+      ref = getDefaultBranch(owner, repo);
+    }
+  }
+  core.debug(`ref: ${ref}`);
 
   githubToken = githubToken || process.env.GITHUB_TOKEN || defaultGithubToken;
   if (!githubToken) {

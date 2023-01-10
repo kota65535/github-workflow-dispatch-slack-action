@@ -15636,6 +15636,7 @@ function wrappy (fn, cb) {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const core = __nccwpck_require__(2186);
+const { context } = __nccwpck_require__(5438);
 const { getOctokit } = __nccwpck_require__(5438);
 const send = __nccwpck_require__(9393);
 const createMessage = __nccwpck_require__(7480);
@@ -15676,6 +15677,21 @@ const main = async () => {
   const mention = core.getInput("mention");
 
   const [owner, repo] = repository.split("/");
+
+  if (!ref) {
+    if (owner === context.repo.owner && repo === context.repo.repo) {
+      // On the same repository
+      if (context.eventName === "pull_request") {
+        ref = context.payload.pull_request.head.ref;
+      } else {
+        ref = context.ref;
+      }
+    } else {
+      // On an another repository
+      ref = getDefaultBranch(owner, repo);
+    }
+  }
+  core.debug(`ref: ${ref}`);
 
   githubToken = githubToken || process.env.GITHUB_TOKEN || defaultGithubToken;
   if (!githubToken) {
