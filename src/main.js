@@ -32,7 +32,7 @@ const main = async () => {
   const inputs = core.getInput("inputs");
   let ref = core.getInput("ref");
   let githubToken = core.getInput("github-token");
-  const defaultGithubToken = core.getInput("default-token");
+  const defaultGithubToken = core.getInput("default-github-token");
   const channel = core.getInput("channel");
   let slackBotToken = core.getInput("slack-bot-token");
   let slackWebhookUrl = core.getInput("slack-webhook-url");
