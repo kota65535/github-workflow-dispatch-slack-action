@@ -27,16 +27,24 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Dispatch event
+      - name: Trigger a workflow of this repo with Slack bot token
         uses: ./
         with:
           workflow: do-something.yml
           inputs: '{"foo":"1","bar":"2"}'
           channel: github
           slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-      - name: Dispatch event 2
+      - name: Trigger a workflow of this repo with Slack incoming webhook
         uses: ./
         with:
           workflow: do-something.yml
           inputs: '{"foo":"1","bar":"2"}'
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Trigger a workflow of an another repo
+        uses: ./
+        with:
+          repository: kota65535/github-workflow-dispatch-action
+          workflow: do-something.yml
+          inputs: '{"foo":"1","bar":"2"}'
+          channel: github
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}

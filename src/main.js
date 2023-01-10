@@ -1,7 +1,7 @@
 const core = require("@actions/core");
 const { context } = require("@actions/github");
 const { getOctokit } = require("@actions/github");
-const send = require("./slack");
+const { sendByBotToken, sendByWebhookUrl } = require("./slack");
 const createMessage = require("./slack_message");
 
 let octokit;
@@ -41,21 +41,6 @@ const main = async () => {
 
   const [owner, repo] = repository.split("/");
 
-  if (!ref) {
-    if (owner === context.repo.owner && repo === context.repo.repo) {
-      // On the same repository
-      if (context.eventName === "pull_request") {
-        ref = context.payload.pull_request.head.ref;
-      } else {
-        ref = context.ref;
-      }
-    } else {
-      // On an another repository
-      ref = getDefaultBranch(owner, repo);
-    }
-  }
-  core.debug(`ref: ${ref}`);
-
   githubToken = githubToken || process.env.GITHUB_TOKEN || defaultGithubToken;
   if (!githubToken) {
     throw new Error("No GitHub token provided");
@@ -69,16 +54,31 @@ const main = async () => {
 
   initOctokit(githubToken);
 
-  // if ref not given, use the default branch
-  if (ref === "") {
-    ref = await getDefaultBranch(owner, repo);
+  if (!ref) {
+    if (owner === context.repo.owner && repo === context.repo.repo) {
+      // On the same repository
+      if (context.eventName === "pull_request") {
+        ref = context.payload.pull_request.head.ref;
+      } else {
+        ref = context.ref;
+      }
+    } else {
+      // On another repository
+      ref = await getDefaultBranch(owner, repo);
+    }
   }
+  core.debug(`ref: ${ref}`);
 
   const workflowName = await getWorkflowName(owner, repo, workflow);
 
   const message = createMessage(owner, repo, workflow, workflowName, ref, inputs, mention);
 
-  await send(channel, slackBotToken, message);
+  if (slackBotToken) {
+    await sendByBotToken(slackBotToken, channel, message);
+  }
+  if (slackWebhookUrl) {
+    await sendByWebhookUrl(slackWebhookUrl, message);
+  }
 };
 
 module.exports = main;
