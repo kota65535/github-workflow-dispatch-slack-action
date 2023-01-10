@@ -15700,8 +15700,8 @@ const main = async () => {
         ref = context.ref;
       }
     } else {
-      // On an another repository
-      ref = getDefaultBranch(owner, repo);
+      // On another repository
+      ref = await getDefaultBranch(owner, repo);
     }
   }
   core.debug(`ref: ${ref}`);
