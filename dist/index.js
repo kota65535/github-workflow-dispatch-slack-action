@@ -15638,7 +15638,7 @@ function wrappy (fn, cb) {
 const core = __nccwpck_require__(2186);
 const { context } = __nccwpck_require__(5438);
 const { getOctokit } = __nccwpck_require__(5438);
-const send = __nccwpck_require__(9393);
+const { sendByBotToken, sendByWebhookUrl } = __nccwpck_require__(9393);
 const createMessage = __nccwpck_require__(7480);
 
 let octokit;
@@ -15706,16 +15706,16 @@ const main = async () => {
 
   initOctokit(githubToken);
 
-  // if ref not given, use the default branch
-  if (ref === "") {
-    ref = await getDefaultBranch(owner, repo);
-  }
-
   const workflowName = await getWorkflowName(owner, repo, workflow);
 
   const message = createMessage(owner, repo, workflow, workflowName, ref, inputs, mention);
 
-  await send(channel, slackBotToken, message);
+  if (slackBotToken) {
+    await sendByBotToken(slackBotToken, channel, message);
+  }
+  if (slackWebhookUrl) {
+    await sendByWebhookUrl(slackWebhookUrl, message);
+  }
 };
 
 module.exports = main;
@@ -15726,29 +15726,54 @@ module.exports = main;
 /***/ 9393:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const axios = __nccwpck_require__(6545);
 
 const SLACK_API_URL = "https://slack.com/api/chat.postMessage";
 
-const send = async (channel, token, message) => {
+const sendByBotToken = async (token, channel, message) => {
   message.channel = channel;
-
-  core.debug(message);
-
-  const res = await axios.post(SLACK_API_URL, message, {
-    headers: {
-      "Content-Type": "application/json; charset=UTF-8",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  let res;
+  try {
+    res = await axios.post(SLACK_API_URL, message, {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (e) {
+    if (e.response) {
+      throw new Error(`failed to send to Slack: status=${e.response.status}, data=${JSON.stringify(e.response.data)}`);
+    } else {
+      throw new Error(`failed to send to Slack: no response.`);
+    }
+  }
   if (!(res.status === 200 && res.data && res.data.ok)) {
     throw new Error(`failed to send to Slack: status=${res.status}, data=${JSON.stringify(res.data)}`);
   }
   return res.data;
 };
 
-module.exports = send;
+const sendByWebhookUrl = async (url, message) => {
+  let res;
+  try {
+    res = await axios.post(url, message);
+  } catch (e) {
+    if (e.response) {
+      throw new Error(`failed to send to Slack: status=${e.response.status}, data=${JSON.stringify(e.response.data)}`);
+    } else {
+      throw new Error(`failed to send to Slack: no response`);
+    }
+  }
+  if (!(res.status === 200 && res.data === "ok")) {
+    throw new Error(`failed to send to Slack: status=${res.status}, data=${JSON.stringify(res.data)}`);
+  }
+  return res.data;
+};
+
+module.exports = {
+  sendByBotToken,
+  sendByWebhookUrl,
+};
 
 
 /***/ }),
