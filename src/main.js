@@ -41,6 +41,19 @@ const main = async () => {
 
   const [owner, repo] = repository.split("/");
 
+  githubToken = githubToken || process.env.GITHUB_TOKEN || defaultGithubToken;
+  if (!githubToken) {
+    throw new Error("No GitHub token provided");
+  }
+
+  slackBotToken = slackBotToken || process.env.SLACK_BOT_TOKEN;
+  slackWebhookUrl = slackWebhookUrl || process.env.SLACK_WEBHOOK_URL;
+  if (!(slackBotToken && channel) && !slackWebhookUrl) {
+    throw new Error("Need to specify the Slack bot token and the channel name, or the webhook URL.");
+  }
+
+  initOctokit(githubToken);
+
   if (!ref) {
     if (owner === context.repo.owner && repo === context.repo.repo) {
       // On the same repository
@@ -55,19 +68,6 @@ const main = async () => {
     }
   }
   core.debug(`ref: ${ref}`);
-
-  githubToken = githubToken || process.env.GITHUB_TOKEN || defaultGithubToken;
-  if (!githubToken) {
-    throw new Error("No GitHub token provided");
-  }
-
-  slackBotToken = slackBotToken || process.env.SLACK_BOT_TOKEN;
-  slackWebhookUrl = slackWebhookUrl || process.env.SLACK_WEBHOOK_URL;
-  if (!(slackBotToken && channel) && !slackWebhookUrl) {
-    throw new Error("Need to specify the Slack bot token and the channel name, or the webhook URL.");
-  }
-
-  initOctokit(githubToken);
 
   const workflowName = await getWorkflowName(owner, repo, workflow);
 
