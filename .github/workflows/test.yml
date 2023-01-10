@@ -35,7 +35,7 @@ jobs:
           channel: github
           slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Dispatch event 2
-        uses: kota65535/github-terraform-plan-slack-action@v1
+        uses: ./
         with:
           workflow: do-something.yml
           inputs: '{"foo":"1","bar":"2"}'
