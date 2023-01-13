@@ -1,5 +1,5 @@
-name: "GitHub Workflow Dispatcher by Slack"
-description: "Send workflow_dispatch event using Slack bot"
+name: "Workflow Dispatch by Slack"
+description: "Trigger workflow_dispatch event using Slack"
 branding:
   icon: "send"
   color: "green"
