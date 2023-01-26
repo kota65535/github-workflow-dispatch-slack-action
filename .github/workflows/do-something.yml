@@ -5,10 +5,10 @@ on:
     inputs:
       foo:
         type: string
-        required: true
+        required: false
       bar:
         type: string
-        required: true
+        required: false
 
 jobs:
   show-context:
