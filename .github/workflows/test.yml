@@ -38,13 +38,12 @@ jobs:
         uses: ./
         with:
           workflow: do-something.yml
-          inputs: '{"foo":"1","bar":"2"}'
           slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Trigger a workflow of an another repo
         uses: ./
         with:
           repository: kota65535/github-workflow-dispatch-action
           workflow: do-something.yml
-          inputs: '{"foo":"1","bar":"2"}'
+          inputs: '{"foo":"1"}'
           channel: github
           slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}

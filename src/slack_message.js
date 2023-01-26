@@ -2,8 +2,7 @@ const BASE_URL = "https://github.com";
 
 const createMessage = (owner, repo, workflow, workflowName, ref, inputs, mention) => {
   const headText = "Following workflow will be executed.";
-  const inputsJson = JSON.parse(inputs);
-  const prettyInput = JSON.stringify(inputsJson, null, 2);
+  const inputsJson = inputs ? JSON.parse(inputs) : undefined;
   const message = {
     text: headText,
     blocks: [
@@ -47,6 +46,7 @@ const createMessage = (owner, repo, workflow, workflowName, ref, inputs, mention
   };
 
   if (inputs) {
+    const prettyInput = JSON.stringify(inputsJson, null, 2);
     message.attachments[0].blocks.push({
       type: "section",
       text: {
@@ -77,10 +77,10 @@ const createMessage = (owner, repo, workflow, workflowName, ref, inputs, mention
           value: JSON.stringify({
             choice: true,
             request: {
-              owner: owner,
-              repo: repo,
+              owner,
+              repo,
               workflow_id: workflow,
-              ref: ref,
+              ref,
               inputs: inputsJson,
             },
           }),
