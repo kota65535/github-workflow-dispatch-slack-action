@@ -4,10 +4,27 @@
     "config:base",
     ":timezone(Asia/Tokyo)",
     ":prHourlyLimitNone",
-    "group:allNonMajor"
   ],
   "labels": [
     "dependencies"
   ],
-  "schedule": "before 1am on Monday"
+  "schedule": "before 1am on Monday",
+  "packageRules": [
+    // based on group:allNonMajor, excluding tools
+    // cf. https://docs.renovatebot.com/presets-group/#groupallnonmajor
+    {
+      "groupName": "all non-major dependencies",
+      "groupSlug": "all-minor-patch",
+      "matchPackagePatterns": [
+        "*"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "excludePackageNames": [
+        "node"
+      ]
+    }
+  ]
 }
