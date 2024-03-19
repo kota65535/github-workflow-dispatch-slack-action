@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "build": "ncc build src/index.js",
     "lint": "eslint --fix \"src/**/*.js\"",
     "format": "prettier --write \"src/**/*.js\""
